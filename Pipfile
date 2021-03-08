@@ -10,5 +10,6 @@ python_version = "3.9"
 start = "python start.py"
 
 [packages]
+tornado = "*"
 
 [dev-packages]
