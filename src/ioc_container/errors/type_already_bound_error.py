@@ -4,5 +4,5 @@ from typing import (
 
 
 class TypeAlreadyBoundError(Exception):
-    def __init__(self, base_type: Type, type: Type) -> None:
-        super().__init__(f'type "{base_type.__name__}" is already bound to "{type.__name__}"')
+    def __init__(self, base_class: Type, type: Type) -> None:
+        super().__init__(f'type "{base_class.__name__}" is already bound to "{type.__name__}"')

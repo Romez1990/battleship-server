@@ -4,5 +4,5 @@ from typing import (
 
 
 class SubclassError(Exception):
-    def __init__(self, type: Type, base_type: Type) -> None:
-        super().__init__(f'type "{type.__name__}" is not subclass of "{base_type.__name__}"')
+    def __init__(self, type: Type, base_class: Type) -> None:
+        super().__init__(f'type "{type.__name__}" is not subclass of "{base_class.__name__}"')

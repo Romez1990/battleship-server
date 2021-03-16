@@ -1,6 +1,5 @@
-from src.ioc_container import container
+services: list[type] = []
 
 
-def service(type_: type) -> None:
-    base_type = type_.__bases__[0]
-    container.bind(type_).to(base_type)
+def service(class_type: type) -> None:
+    services.append(class_type)

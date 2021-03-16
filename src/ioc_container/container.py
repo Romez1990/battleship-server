@@ -34,45 +34,45 @@ class Container:
         module_object = module(self)
         module_object.bind()
 
-    def bind(self, type: Type) -> BindingContext:
-        return BindingContext(type, lambda base_type: self.__bind_type(type, base_type))
+    def bind(self, class_type: Type) -> BindingContext:
+        return BindingContext(class_type, lambda base_class: self.__bind_type(class_type, base_class))
 
-    def __bind_type(self, type: Type, base_type: Type) -> None:
-        if not issubclass(type, base_type):
-            raise SubclassError(type, base_type)
-        if base_type in self.__types:
-            type = self.__types[base_type]
-            raise TypeAlreadyBoundError(base_type, type)
-        elif base_type in self.__instances:
-            instance = self.__instances[base_type]
-            raise TypeAlreadyBoundError(base_type, type(instance))
-        self.__types[base_type] = type
+    def __bind_type(self, class_type: Type, base_class: Type) -> None:
+        if not issubclass(class_type, base_class):
+            raise SubclassError(class_type, base_class)
+        if base_class in self.__types:
+            class_type = self.__types[base_class]
+            raise TypeAlreadyBoundError(base_class, class_type)
+        elif base_class in self.__instances:
+            instance = self.__instances[base_class]
+            raise TypeAlreadyBoundError(base_class, class_type(instance))
+        self.__types[base_class] = class_type
 
-    def get(self, base_type: Type[T]) -> T:
-        if base_type in self.__instances:
-            instance = self.__instances[base_type]
-            return self.__as_type(instance, base_type)
-        if base_type not in self.__types:
-            raise TypeNotFoundError(base_type)
-        type = self.__types[base_type]
+    def get(self, base_class: Type[T]) -> T:
+        if base_class in self.__instances:
+            instance = self.__instances[base_class]
+            return self.__as_type(instance, base_class)
+        if base_class not in self.__types:
+            raise TypeNotFoundError(base_class)
+        type = self.__types[base_class]
         instance = self.__instantiate_type(type)
-        del self.__types[base_type]
-        self.__instances[base_type] = instance
-        return self.__as_type(instance, base_type)
+        del self.__types[base_class]
+        self.__instances[base_class] = instance
+        return self.__as_type(instance, base_class)
 
-    def __as_type(self, instance: object, type: Type[T]) -> T:
-        if not isinstance(instance, type):
-            raise TypeMatchingError(instance, type)
+    def __as_type(self, instance: object, class_type: Type[T]) -> T:
+        if not isinstance(instance, class_type):
+            raise TypeMatchingError(instance, class_type)
         return instance
 
-    def __instantiate_type(self, type: Type) -> object:
-        type_hints = self.__get_constructor_type_hints(type)
+    def __instantiate_type(self, class_type: Type) -> object:
+        type_hints = self.__get_constructor_type_hints(class_type)
         parameter_type: Type[object]
-        return type(**{parameter_name: self.get(parameter_type)
-                       for parameter_name, parameter_type in type_hints.items()})
+        return class_type(**{parameter_name: self.get(parameter_type)
+                             for parameter_name, parameter_type in type_hints.items()})
 
-    def __get_constructor_type_hints(self, type: Type) -> TypeHints:
-        constructor = type.__init__
+    def __get_constructor_type_hints(self, class_type: Type) -> TypeHints:
+        constructor = class_type.__init__
         if self.__is_constructor_empty(constructor):
             return TypeHints({})
         type_hints = get_type_hints(constructor)
@@ -82,7 +82,7 @@ class Container:
         if len(type_hints) != len(parameter_names):
             parameters_with_no_type_hint = [parameter_name for parameter_name in parameter_names
                                             if parameter_name not in type_hints]
-            raise MissingTypeHintError(type, parameters_with_no_type_hint)
+            raise MissingTypeHintError(class_type, parameters_with_no_type_hint)
         return TypeHints(type_hints)
 
     def __is_constructor_empty(self, constructor: Callable) -> bool:
@@ -92,6 +92,3 @@ class Container:
         number_of_parameters = func.__code__.co_argcount
         self_parameter = 1
         return list(func.__code__.co_varnames[self_parameter:number_of_parameters])
-
-
-container = Container()
