@@ -7,15 +7,24 @@ from src.game_session import GameSessionHandler
 from .app import App
 
 
+from ..rest_api import REST_API_URLS
+
+URLS = [
+    (r'/api/start', GameStartHandler),
+    (r'/game_session', GameSessionHandler),
+]  # TODO: Try to make it more beautiful
+
+URLS += REST_API_URLS
+
+
 @service
 class AppImpl(App, Application):
     def __init__(self) -> None:
-        super().__init__([
-            ('/api/start', GameStartHandler),
-            ('/game_session', GameSessionHandler),
-        ])
+        super().__init__(
+            URLS
+        )
 
     def run(self) -> None:
-        self.listen(8000)
+        self.listen(8001)
         print('Server has been started')
         IOLoop.current().start()
