@@ -1,11 +1,6 @@
 import tornado.web
 import json
 
-from tornado import escape, httputil
-
-from typing import Optional
-
-
 from .BaseHandler import BaseHandler
 
 
@@ -18,11 +13,4 @@ class PlayerHandler(BaseHandler, tornado.web.RequestHandler):
             'year_of_birth': data.get('year_of_birth'),
             'grade': data.get('grade'),
         }
-        self.write({'player': player})  # TODO: Set the HTTP status code
-
-    def set_status(self, status_code: int, reason: Optional[str] = None) -> None:
-        self._status_code = status_code
-        if reason is not None:
-            self._reason = escape.native_str(reason)
-        else:
-            self._reason = httputil.responses.get(status_code, "Unknown")
+        self.write({'status_code': self.set_status(201)})
