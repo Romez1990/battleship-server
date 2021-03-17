@@ -1,6 +1,6 @@
 import tornado.web
 
-from .Base import Base
+from ..generics import Base
 
 
 class CreateGameHandler(Base, tornado.web.RequestHandler):

@@ -1,7 +1,7 @@
 import tornado.web
 import json
 
-from .Base import Base
+from ..generics import Base
 
 
 class PlayerHandler(Base, tornado.web.RequestHandler):
