@@ -1,10 +1,10 @@
 import tornado.web
 import json
 
-from .BaseHandler import BaseHandler
+from .Base import Base
 
 
-class PlayerHandler(BaseHandler, tornado.web.RequestHandler):
+class PlayerHandler(Base, tornado.web.RequestHandler):
     def post(self) -> None:
         data = json.loads(self.request.body)
         player = {

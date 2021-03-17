@@ -1,9 +1,9 @@
 import tornado.web
 
-from .BaseHandler import BaseHandler
+from .Base import Base
 
 
-class CreateGameHandler(BaseHandler, tornado.web.RequestHandler):
+class CreateGameHandler(Base, tornado.web.RequestHandler):
     def get(self) -> None:
         min_game_code = 000
         max_game_code = 999

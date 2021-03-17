@@ -5,7 +5,7 @@ from tornado import escape, httputil
 from typing import Optional, Union
 
 
-class BaseHandler(tornado.web.RequestHandler):
+class Base(tornado.web.RequestHandler):
     def set_default_headers(self) -> None:
         self.set_header("Content-Type", 'application/json')
 
