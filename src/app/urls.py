@@ -1,12 +1,11 @@
 from src.game_start import GameStartHandler
 from src.game_session import GameSessionHandler
+from .routes import HttpRoute, WebSocketRoute
 
-from ..rest_api import REST_API_URLS
-
-
-URLS = [
-    (r'/api/start', GameStartHandler),
-    (r'/game_session', GameSessionHandler),
+http_urls: list[HttpRoute] = [
+    HttpRoute('start', GameStartHandler),
 ]
 
-URLS += REST_API_URLS
+web_socket_urls: list[WebSocketRoute] = [
+    WebSocketRoute('game-session', GameSessionHandler),
+]
