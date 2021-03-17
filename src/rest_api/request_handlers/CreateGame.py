@@ -1,10 +1,7 @@
 import tornado.web
 
-from ..generics import Base
+from ..generics import BaseApi
 
 
-class CreateGameHandler(Base, tornado.web.RequestHandler):
-    def get(self) -> None:
-        min_game_code = 000
-        max_game_code = 999
-        self.write({'result': 000})  # TODO: write logic for game code
+class CreateGameHandler(BaseApi, tornado.web.RequestHandler):
+    GET_JSON = {'result': '001'}
