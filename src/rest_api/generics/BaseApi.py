@@ -1,9 +1,9 @@
 import tornado.web
 
-from ..generics import Base
+from ..generics import BaseHandler
 
 
-class BaseApi(Base, tornado.web.RequestHandler):
+class BaseHandlerApi(BaseHandler, tornado.web.RequestHandler):
     GET_JSON: dict = None
     POST_JSON: dict = None
 
