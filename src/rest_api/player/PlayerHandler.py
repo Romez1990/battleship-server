@@ -1,6 +1,6 @@
 import json
 
-from ..generics import BaseHandler
+from src.rest_api.generics import BaseHandler
 
 
 class PlayerHandler(BaseHandler):

@@ -1,8 +1,9 @@
 from src.game_start import GameStartHandler
 from src.game_session import GameSessionHandler
-from src.rest_api.request_handlers import PlayerHandler
+
 from .routes import HttpRoute, WebSocketRoute
-from ..rest_api.create_game.CreateGame import CreateGameHandler
+from ..rest_api.create_game import CreateGameHandler
+from ..rest_api.player import PlayerHandler
 
 http_urls: list[HttpRoute] = [
     HttpRoute('start', GameStartHandler),
