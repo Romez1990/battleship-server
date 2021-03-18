@@ -1,7 +1,6 @@
-import tornado.web
 
 from ..generics import BaseHandlerApi
 
 
-class CreateGameHandler(BaseHandlerApi, tornado.web.RequestHandler):
+class CreateGameHandler(BaseHandlerApi):
     GET_JSON = {'result': '001'}

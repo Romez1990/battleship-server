@@ -3,7 +3,7 @@ import tornado.web
 from ..generics import BaseHandler
 
 
-class BaseHandlerApi(BaseHandler, tornado.web.RequestHandler):
+class BaseHandlerApi(BaseHandler):
     GET_JSON: dict = None
     POST_JSON: dict = None
 
