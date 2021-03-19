@@ -13,3 +13,7 @@ class CreateGameHandler(RequestHandler):
     def get(self) -> None:
         code = self.__create_game.get_game_code()
         self.write(code)
+
+    def post(self) -> None:
+        code = self.__create_game.post_game_code(json_data=self.request.body)
+        print(code)
