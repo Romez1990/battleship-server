@@ -11,5 +11,6 @@ start = "python start.py"
 
 [packages]
 tornado = "*"
+pydantic = "*"
 
 [dev-packages]
