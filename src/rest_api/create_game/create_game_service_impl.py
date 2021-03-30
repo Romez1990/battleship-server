@@ -13,8 +13,17 @@ class GameStartJson(BaseModel):
 
 @service
 class CreateGameServiceImpl(CreateGameService):
+    code_game = []
+
     def get_game_code(self) -> Union[str, bytes, dict]:
-        return {'code': 222}  # TODO: Create logic
+        if len(self.code_game) == 0:
+            self.code_game.append(1)
+            return {'code_game': self.code_game[0]}
+        else:
+            code = self.code_game[-1] + 1
+            self.code_game.append(code)
+            return {'code_game': code}
+
 
     def post_game_code(self, json_data):
         print(json_data)
