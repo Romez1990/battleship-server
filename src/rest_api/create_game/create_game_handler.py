@@ -17,3 +17,7 @@ class CreateGameHandler(RequestHandler):
     def post(self) -> None:
         code = self.__create_game.post_game_code(json_data=self.request.body)
         print(code)
+
+    def post(self) -> None:
+        connect = self.__create_game.connect_to_game()
+        pass

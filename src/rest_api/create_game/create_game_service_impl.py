@@ -24,6 +24,8 @@ class CreateGameServiceImpl(CreateGameService):
             self.code_game.append(code)
             return {'code_game': code}
 
+    def connect_to_game(self) -> Union[str, int, dict]:
+        pass  # TODO: Write logic for connect to game
 
     def post_game_code(self, json_data):
         print(json_data)
