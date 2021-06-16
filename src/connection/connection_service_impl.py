@@ -8,8 +8,8 @@ from .models import (
     PlayerData,
     ConnectionCode,
     ConnectionToGameResult,
+    PlayerConnection,
 )
-from .player_connection import PlayerConnection
 
 
 @service

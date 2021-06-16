@@ -1,6 +1,7 @@
 from typing import (
     Optional,
 )
+from tornado.websocket import WebSocketHandler
 from pydantic import BaseModel
 
 from src.sockets import Message
@@ -27,3 +28,9 @@ class CreateGameMessage(Message[PlayerData]):
 
 class ConnectionToGameResult(BaseModel):
     result: bool
+
+
+class PlayerConnection:
+    def __init__(self, socket: WebSocketHandler, player_data: PlayerData) -> None:
+        self.socket = socket
+        self.player_data = player_data
