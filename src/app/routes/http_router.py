@@ -1,4 +1,6 @@
-from typing import Type
+from typing import (
+    Type,
+)
 from tornado.web import RequestHandler
 
 from .route import Route

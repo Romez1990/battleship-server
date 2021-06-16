@@ -1,4 +1,6 @@
-from typing import Type
+from typing import (
+    Type,
+)
 from tornado.websocket import WebSocketHandler
 
 from .route import Route

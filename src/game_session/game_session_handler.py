@@ -1,6 +1,4 @@
 from tornado.websocket import WebSocketHandler
-
-
 from src.ioc_container import container
 from .game_session_service import GameSessionService
 
@@ -11,11 +9,11 @@ class GameSessionHandler(WebSocketHandler):
 
     __game_create_websocket: GameSessionService
 
-    def open(self):
+    def open(self) -> None:
         self.__game_create_websocket.open()
 
-    def on_message(self, message):
+    def on_message(self, message) -> None:
         self.__game_create_websocket.on_message(message)
 
-    def on_close(self):
+    def on_close(self) -> None:
         self.__game_create_websocket.on_close()
