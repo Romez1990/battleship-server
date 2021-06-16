@@ -21,7 +21,7 @@ class ConnectionServiceImpl(ConnectionService):
     def connect(self, socket: WebSocketHandler, player_data: PlayerData) -> BaseModel:
         if player_data.connection_code is None:
             return self.__create_game(socket, player_data)
-        return self.__connect_to_game(socket, player_data)
+        return self.__connect_to_game(player_data)
 
     def __create_game(self, socket: WebSocketHandler, player_data: PlayerData) -> ConnectionCode:
         code = self.__get_code()
@@ -34,11 +34,13 @@ class ConnectionServiceImpl(ConnectionService):
             if code not in self.__connections:
                 return code
 
-    def __connect_to_game(self, socket: WebSocketHandler, player_data: PlayerData) -> ConnectionToGameResult:
+    def __connect_to_game(self, player_data: PlayerData) -> ConnectionToGameResult:
         if player_data.connection_code not in self.__connections:
             return ConnectionToGameResult(result=False)
         player_connection = self.__connections.pop(player_data.connection_code)
-        return ConnectionToGameResult(result=True)
+        result = ConnectionToGameResult(result=True)
+        player_connection.socket.write_message(result.json())
+        return result
 
     def remove_socket_if_exists(self, socket: WebSocketHandler) -> None:
         for code, player_connection in self.__connections.items():
