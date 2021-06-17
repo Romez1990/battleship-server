@@ -38,9 +38,9 @@ class ConnectionServiceImpl(ConnectionService):
         if player_data.connection_code not in self.__connections:
             return ConnectionToGameResult(result=False)
         player_connection = self.__connections.pop(player_data.connection_code)
-        result = ConnectionToGameResult(result=True)
-        player_connection.socket.write_message(result.json())
-        return result
+        result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player)
+        player_connection.socket.write_message(result_for_enemy.json())
+        return ConnectionToGameResult(is_connected=True, enemy=player_connection.player_data.player)
 
     def remove_socket_if_exists(self, socket: WebSocketHandler) -> None:
         for code, player_connection in self.__connections.items():

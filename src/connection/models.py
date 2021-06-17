@@ -27,7 +27,8 @@ class CreateGameMessage(Message[PlayerData]):
 
 
 class ConnectionToGameResult(BaseModel):
-    result: bool
+    is_connected: bool
+    enemy: Optional[Player]
 
 
 class PlayerConnection:

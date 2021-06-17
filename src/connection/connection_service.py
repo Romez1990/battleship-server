@@ -1,5 +1,6 @@
 from abc import ABCMeta, abstractmethod
 from tornado.websocket import WebSocketHandler
+from pydantic import BaseModel
 
 from .models import (
     PlayerData,
