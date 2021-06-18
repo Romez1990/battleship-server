@@ -1,15 +1,23 @@
 from abc import ABCMeta, abstractmethod
+from tornado.websocket import WebSocketHandler
+
+from src.connection.models import (
+    PlayerConnection,
+)
+from .models import (
+    ShotResult,
+    MoveData,
+    AnswerMessage,
+    AnswerResult,
+)
 
 
 class GameSessionService(metaclass=ABCMeta):
     @abstractmethod
-    def open(self) -> None:
-        ...
+    def add_session(self, player1: PlayerConnection, player2: PlayerConnection) -> None: ...
 
     @abstractmethod
-    def on_message(self, message) -> None:
-        ...
+    def go(self, socket: WebSocketHandler, move_data: MoveData) -> ShotResult: ...
 
     @abstractmethod
-    def on_close(self) -> None:
-        ...
+    def answer(self, socket: WebSocketHandler, answer_data: AnswerMessage) -> AnswerResult: ...

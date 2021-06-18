@@ -3,10 +3,11 @@ from tornado.websocket import WebSocketHandler
 from pydantic import BaseModel
 
 from src.ioc_container import service
+from src.game_session import GameSessionService
 from .connection_service import ConnectionService
 from .code_counter import CodeCounter
 from .models import (
-    PlayerData,
+    PlayerConnectionData,
     ConnectionCode,
     ConnectionToGameResult,
     PlayerConnection,
@@ -15,16 +16,17 @@ from .models import (
 
 @service
 class ConnectionServiceImpl(ConnectionService):
-    def __init__(self, code_counter: CodeCounter) -> None:
+    def __init__(self, code_counter: CodeCounter, session: GameSessionService) -> None:
         self.__code_counter = code_counter
+        self.__session = session
         self.__connections: dict[str, PlayerConnection] = {}
 
-    def connect(self, socket: WebSocketHandler, player_data: PlayerData) -> BaseModel:
+    def connect(self, socket: WebSocketHandler, player_data: PlayerConnectionData) -> BaseModel:
         if player_data.connection_code is None:
             return self.__create_game(socket, player_data)
-        return self.__connect_to_game(player_data)
+        return self.__connect_to_game(socket, player_data)
 
-    def __create_game(self, socket: WebSocketHandler, player_data: PlayerData) -> ConnectionCode:
+    def __create_game(self, socket: WebSocketHandler, player_data: PlayerConnectionData) -> ConnectionCode:
         code = self.__get_code()
         self.__connections[code] = PlayerConnection(socket, player_data)
         return ConnectionCode(code=code)
@@ -35,14 +37,17 @@ class ConnectionServiceImpl(ConnectionService):
             if code not in self.__connections:
                 return code
 
-    def __connect_to_game(self, player_data: PlayerData) -> ConnectionToGameResult:
+    def __connect_to_game(self, socket: WebSocketHandler, player_data: PlayerConnectionData) -> ConnectionToGameResult:
         if player_data.connection_code not in self.__connections:
-            return ConnectionToGameResult(result=False)
+            return ConnectionToGameResult(is_connected=False)
         player_connection = self.__connections.pop(player_data.connection_code)
+
+        self.__session.add_session(player_connection, PlayerConnection(socket, player_data))
+
         who_go_first = bool(randint(0, 1))
         result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player, go=who_go_first)
         player_connection.socket.write_message(result_for_enemy.json())
-        return ConnectionToGameResult(is_connected=True, enemy=player_connection.player_data.player,
+        return ConnectionToGameResult(is_connected=True, enemy=player_connection.game_data.player,
                                       go=not who_go_first)
 
     def remove_socket_if_exists(self, socket: WebSocketHandler) -> None:
