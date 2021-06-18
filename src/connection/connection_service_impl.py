@@ -44,11 +44,11 @@ class ConnectionServiceImpl(ConnectionService):
 
         self.__session.add_session(player_connection, PlayerConnection(socket, player_data))
 
-        who_go_first = bool(randint(0, 1))
-        result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player, go=who_go_first)
+        player_goes_first = bool(randint(0, 1))
+        result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player, go=not player_goes_first)
         player_connection.socket.write_message(result_for_enemy.json())
-        return ConnectionToGameResult(is_connected=True, enemy=player_connection.game_data.player,
-                                      go=not who_go_first)
+        return ConnectionToGameResult(is_connected=True, enemy=player_connection.player,
+                                      go=player_goes_first)
 
     def remove_socket_if_exists(self, socket: WebSocketHandler) -> None:
         for code, player_connection in self.__connections.items():
