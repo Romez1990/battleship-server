@@ -1,3 +1,4 @@
+from random import randint
 from tornado.websocket import WebSocketHandler
 from pydantic import BaseModel
 
@@ -38,9 +39,11 @@ class ConnectionServiceImpl(ConnectionService):
         if player_data.connection_code not in self.__connections:
             return ConnectionToGameResult(result=False)
         player_connection = self.__connections.pop(player_data.connection_code)
-        result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player)
+        who_go_first = bool(randint(0, 1))
+        result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player, go=who_go_first)
         player_connection.socket.write_message(result_for_enemy.json())
-        return ConnectionToGameResult(is_connected=True, enemy=player_connection.player_data.player)
+        return ConnectionToGameResult(is_connected=True, enemy=player_connection.player_data.player,
+                                      go=not who_go_first)
 
     def remove_socket_if_exists(self, socket: WebSocketHandler) -> None:
         for code, player_connection in self.__connections.items():

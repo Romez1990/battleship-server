@@ -13,6 +13,7 @@ class Player(BaseModel):
 
 
 class ConnectionCode(BaseModel):
+    message_type = 'connection_code'
     code: str
 
 
@@ -27,8 +28,10 @@ class CreateGameMessage(Message[PlayerData]):
 
 
 class ConnectionToGameResult(BaseModel):
+    message_type = 'game_connected'
     is_connected: bool
     enemy: Optional[Player]
+    go: bool
 
 
 class PlayerConnection:
