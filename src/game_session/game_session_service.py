@@ -7,7 +7,7 @@ from src.connection.models import (
 from .models import (
     ShotResult,
     MoveData,
-    AnswerMessage,
+    AnswerData,
     AnswerResult,
 )
 
@@ -20,4 +20,7 @@ class GameSessionService(metaclass=ABCMeta):
     def go(self, socket: WebSocketHandler, move_data: MoveData) -> ShotResult: ...
 
     @abstractmethod
-    def answer(self, socket: WebSocketHandler, answer_data: AnswerMessage) -> AnswerResult: ...
+    def answer(self, socket: WebSocketHandler, answer_data: AnswerData) -> AnswerResult: ...
+
+    @abstractmethod
+    def remove_session_if_exists(self, socket: WebSocketHandler) -> None: ...

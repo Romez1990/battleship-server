@@ -29,12 +29,12 @@ class GameSessionServiceImpl(GameSessionService):
         self.__sessions.append(Session(player1, player2))
 
     def go(self, socket: WebSocketHandler, move_data: MoveData) -> ShotResult:
-        player, enemy = self.__find_session(socket)
+        player, enemy = self.__get_players(socket)
 
         shot = move_data.coordinates
         hit_ships = enemy.ships.filter(lambda ship: ship.collides(shot))
         if len(hit_ships) == 0:
-            return ShotResult(hit=False)
+            return ShotResult(hit=False, destroyed=False, won=False)
 
         player.current_question = self.__questions.get_question()
         player.current_question_model = player.current_question.to_model()
@@ -45,22 +45,30 @@ class GameSessionServiceImpl(GameSessionService):
         enemy.socket.write_message(GetShotResult(coordinates=shot).json())
 
         if not hit_ship.destroyed:
-            return ShotResult(hit=True, question=player.current_question_model)
+            return ShotResult(hit=True, question=player.current_question_model, destroyed=False, won=False)
         enemy.remove_ship(hit_ship)
         if len(enemy.ships) != 0:
             return ShotResult(hit=True, destroyed=True, destroyed_ship=hit_ship.to_ship(),
-                              question=player.current_question_model)
+                              question=player.current_question_model, won=False)
         return ShotResult(hit=True, destroyed=True, destroyed_ship=hit_ship.to_ship(), won=True,
                           question=player.current_question_model)
 
-    def __find_session(self, socket: WebSocketHandler) -> tuple[PlayerConnection, PlayerConnection]:
-        for session in self.__sessions:
-            if session.player1.socket is socket or session.player2.socket is socket:
-                return session.sort(socket)
-
     def answer(self, socket: WebSocketHandler, answer_data: AnswerData) -> AnswerResult:
-        player, enemy = self.__find_session(socket)
+        player, enemy = self.__get_players(socket)
         right = player.current_question.answers[0] == player.current_question_model.answers[answer_data.answer_index]
         result = AnswerResult(right=right)
         enemy.socket.write_message(result.json())
         return result
+
+    def remove_session_if_exists(self, socket: WebSocketHandler) -> None:
+        session = self.__find_session(socket)
+        if session is not None:
+            self.__sessions.remove(session)
+
+    def __get_players(self, socket: WebSocketHandler) -> tuple[PlayerConnection, PlayerConnection]:
+        return self.__find_session(socket).sort(socket)
+
+    def __find_session(self, socket: WebSocketHandler) -> Session:
+        for session in self.__sessions:
+            if session.player1.socket is socket or session.player2.socket is socket:
+                return session

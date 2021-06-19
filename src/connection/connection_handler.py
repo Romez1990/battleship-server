@@ -9,6 +9,8 @@ from .models import (
 from src.game_session.models import MoveMessage, AnswerMessage
 from src.sockets.message_error import MessageError
 
+counter = 0
+
 
 class ConnectionHandler(WebSocketHandler):
     def initialize(self) -> None:
@@ -30,9 +32,13 @@ class ConnectionHandler(WebSocketHandler):
                 move_data = MoveMessage.parse_raw(message)
                 result = self.__session.go(self, move_data)
             except MessageError:
-                move_data = AnswerMessage.parse_raw(message)
-                result = self.__session.answer(self, move_data)
+                answer_data = AnswerMessage.parse_raw(message)
+                result = self.__session.answer(self, answer_data)
         self.write_message(result.json())
 
     def on_close(self) -> None:
-        self.__connection.remove_socket_if_exists(self)
+        global counter
+        print(f'closed {counter}')
+        counter += 1
+        # self.__connection.remove_socket_if_exists(self)
+        # self.__session.remove_session_if_exists(self)

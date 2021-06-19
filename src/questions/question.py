@@ -22,4 +22,6 @@ class Question:
         return self.__answers
 
     def to_model(self) -> QuestionModel:
-        return QuestionModel(text=self.text, answers=shuffle(self.answers))
+        shuffled_answers = self.answers.copy()
+        shuffle(shuffled_answers)
+        return QuestionModel(text=self.text, answers=shuffled_answers)
