@@ -39,7 +39,7 @@ class ConnectionServiceImpl(ConnectionService):
 
     def __connect_to_game(self, socket: WebSocketHandler, player_data: PlayerConnectionData) -> ConnectionToGameResult:
         if player_data.connection_code not in self.__connections:
-            return ConnectionToGameResult(is_connected=False)
+            return ConnectionToGameResult(is_connected=False, go=False)
         player_connection = self.__connections.pop(player_data.connection_code)
 
         self.__session.add_session(player_connection, PlayerConnection(socket, player_data))

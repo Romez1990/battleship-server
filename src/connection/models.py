@@ -42,7 +42,7 @@ class ConnectionToGameResult(BaseModel):
     message_type = 'game_connected'
     is_connected: bool
     enemy: Optional[Player]
-    go: Optional[bool]
+    go: bool
 
 
 class PlayerConnection:
