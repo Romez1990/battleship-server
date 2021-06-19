@@ -9,12 +9,6 @@ from .question_service import QuestionService
 class QuestionServiceImpl(QuestionService):
     def __init__(self) -> None:
         self.__questions = [
-            Question('Какого цвета трава?', [
-                'Зелёная',
-                'Синяя',
-                'Красная',
-                'Чёрная',
-            ]),
             Question('Сколько планет в Солнейчной система?', [
                 '8',
                 '9',
@@ -70,10 +64,10 @@ class QuestionServiceImpl(QuestionService):
                 'Телефон',
             ]),
             Question('Что может одновременно идти и лежать, стоять и висеть?', [
+                'Часы',
                 'Машина',
                 'Корабль',
                 'Поезд',
-                'Часы',
             ]),
         ]
 
