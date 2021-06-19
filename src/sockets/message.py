@@ -1,4 +1,5 @@
 from typing import (
+    Optional,
     Type,
     TypeVar,
     Generic,
@@ -12,7 +13,7 @@ T = TypeVar('T', bound=BaseModel)
 
 class MessageModel(BaseModel):
     message_type: str
-    data: dict
+    data: Optional[dict]
 
 
 class Message(Generic[T]):
@@ -24,4 +25,6 @@ class Message(Generic[T]):
         message = MessageModel.parse_raw(text)
         if message.message_type != cls.message_type:
             raise MessageError('message.message_type != cls.message_type')
+        if cls.data_type is None:
+            return None
         return cls.data_type(**message.data)

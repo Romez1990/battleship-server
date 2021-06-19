@@ -96,9 +96,8 @@ class GameShip:
     def hit(self, shop: Vector) -> None:
         self.__damaged_parts.append(shop)
 
-    @property
-    def destroyed(self) -> bool:
-        return self.__damaged_parts == self.size
+    def is_destroyed(self) -> bool:
+        return len(self.__damaged_parts) == self.size
 
     def to_ship(self) -> Ship:
         return Ship(coordinates=self.__coordinates, size=self.__size, orientation=self.__orientation)

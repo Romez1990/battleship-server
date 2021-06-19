@@ -53,9 +53,15 @@ class ShotResult(BaseModel):
     question: Optional[QuestionModel]
 
 
-class GetShotResult(BaseModel):
-    message_type = 'get_move_result'
+class GetEnemyShot(BaseModel):
+    message_type = 'get_enemy_shot'
     coordinates: Vector
+    hit: bool
+
+
+class GetEnemyAnswer(BaseModel):
+    message_type = 'get_enemy_answer'
+    right: bool
 
 
 class AnswerData(BaseModel):
@@ -70,3 +76,12 @@ class AnswerMessage(Message[AnswerData]):
 class AnswerResult(BaseModel):
     message_type = 'answer_result'
     right: bool
+
+
+class EnemyGoMessage(Message[None]):
+    message_type = 'enemy_go'
+    data_type = None
+
+
+class PlayerTurn(BaseModel):
+    message_type = 'player_turn'
