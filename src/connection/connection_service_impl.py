@@ -44,8 +44,7 @@ class ConnectionServiceImpl(ConnectionService):
 
         self.__session.add_session(player_connection, PlayerConnection(socket, player_data))
 
-        # player_goes_first = bool(randint(0, 1))
-        player_goes_first = True
+        player_goes_first = bool(randint(0, 1))
         result_for_enemy = ConnectionToGameResult(is_connected=True, enemy=player_data.player, go=not player_goes_first)
         player_connection.socket.write_message(result_for_enemy.json())
         return ConnectionToGameResult(is_connected=True, enemy=player_connection.player,
