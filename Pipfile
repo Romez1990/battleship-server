@@ -3,14 +3,17 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-[requires]
-python_version = "3.9"
-
 [scripts]
 start = "python start.py"
+build = "pyinstaller --noconfirm start.spec"
+
+[requires]
+python_version = "3.9"
 
 [packages]
 tornado = "*"
 pydantic = "*"
+pyinstaller = "*"
 
 [dev-packages]
+pyinstaller = "*"
