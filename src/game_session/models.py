@@ -57,6 +57,7 @@ class GetEnemyShot(BaseModel):
     message_type = 'get_enemy_shot'
     coordinates: Vector
     hit: bool
+    won: bool
 
 
 class GetEnemyAnswer(BaseModel):

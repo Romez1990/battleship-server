@@ -37,25 +37,32 @@ class GameSessionServiceImpl(GameSessionService):
         hit_ships = enemy.ships.filter(lambda ship: ship.collides(shot))
         hit = len(hit_ships) != 0
 
-        enemy.socket.write_message(GetEnemyShot(coordinates=shot, hit=hit).json())
-
         if not hit:
-            return ShotResult(hit=False, destroyed=False, won=False)
+            question = None
+            destroyed = False
+            destroyed_ship = None
+            won = False
+        else:
+            player.current_question = self.__questions.get_question()
+            player.current_question_model = player.current_question.to_model()
+            question = player.current_question_model
 
-        player.current_question = self.__questions.get_question()
-        player.current_question_model = player.current_question.to_model()
+            hit_ship: GameShip = hit_ships[0]
+            hit_ship.hit(shot)
+            destroyed = hit_ship.is_destroyed()
 
-        hit_ship: GameShip = hit_ships[0]
-        hit_ship.hit(shot)
+            if not destroyed:
+                destroyed_ship = None
+                won = False
+            else:
+                destroyed_ship = hit_ship.to_ship()
+                enemy.remove_ship(hit_ship)
 
-        if not hit_ship.is_destroyed():
-            return ShotResult(hit=True, question=player.current_question_model, destroyed=False, won=False)
-        enemy.remove_ship(hit_ship)
-        if len(enemy.ships) != 0:
-            return ShotResult(hit=True, destroyed=True, destroyed_ship=hit_ship.to_ship(),
-                              question=player.current_question_model, won=False)
-        return ShotResult(hit=True, destroyed=True, destroyed_ship=hit_ship.to_ship(), won=True,
-                          question=player.current_question_model)
+                won = len(enemy.ships) == 0
+
+        enemy.socket.write_message(GetEnemyShot(coordinates=shot, hit=hit, won=won).json())
+
+        return ShotResult(hit=hit, destroyed=destroyed, destroyed_ship=destroyed_ship, won=won, question=question)
 
     def answer(self, socket: WebSocketHandler, answer_data: AnswerData) -> AnswerResult:
         player, enemy = self.__get_players(socket)
