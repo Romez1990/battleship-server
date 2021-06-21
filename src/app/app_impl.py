@@ -29,7 +29,8 @@ class AppImpl(App, Application):
         return route.to_rule()
 
     def run(self) -> None:
-        port = getenv('PORT') or '8000'
+        port = getenv('PORT')
+        port = 8000 if port is None else int(port)
         self.listen(port)
         print(f'Server has been started at port {port}')
         IOLoop.current().start()
