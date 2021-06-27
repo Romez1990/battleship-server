@@ -9,7 +9,7 @@ from .question_service import QuestionService
 class QuestionServiceImpl(QuestionService):
     def __init__(self) -> None:
         self.__questions = [
-            Question('Сколько планет в Солнейчной система?', [
+            Question('Сколько планет в Солнечной системе?', [
                 '8',
                 '9',
                 '10',
@@ -21,7 +21,7 @@ class QuestionServiceImpl(QuestionService):
                 '200 дм',
                 '20 дм',
             ]),
-            Question('Зелёный пигмент, окрашивающий листья растений, называется', [
+            Question('Как называется зелёный пигмент, окрашивающий листья растений?', [
                 'Хлорофилл',
                 'Хлорофиллипт',
                 'Хлоропласт',
@@ -36,7 +36,7 @@ class QuestionServiceImpl(QuestionService):
             Question('Сколько хромосом в геноме человека?', [
                 '46',
                 '44',
-                '42',
+                '47',
                 '48',
             ]),
             Question('Кто спит с открытыми глазами?', [
